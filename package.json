@@ -1,12 +1,42 @@
 {
   "name": "@ignis-web/server-component",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
+  "keywords": [
+    "server component",
+    "simple rendering html",
+    "view components",
+    "view server components",
+    "components",
+    "rendering",
+    "server",
+    "server-side",
+    "template",
+    "literal",
+    "literals",
+    "template literal components",
+    "template literal server components",
+    "template literal tagged function",
+    "tagged template literal",
+    "tagged template string",
+    "template strings",
+    "templating",
+    "template",
+    "tagged-template-literals",
+    "html",
+    "html templates",
+    "helper",
+    "helpers",
+    "style",
+    "css",
+    "css in js",
+    "server web components",
+    "web components"
+  ],
   "author": "dm-kamaev@rambler.ru",
   "license": "ISC",
   "dependencies": {
@@ -16,5 +46,12 @@
     "jest": "27.4.5",
     "eslint": "8.5.0",
     "eslint-plugin-unicorn": "39.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dm-kamaev/server-component.git"
+  },
+  "engines": {
+    "node": ">=14.17.3"
   }
 }

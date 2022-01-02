@@ -16,22 +16,26 @@ class ListBook extends IgnisComp {
 
 class Book extends IgnisComp {
 
+  // javascript for all components Book. It will be place in <head></head>
   headJs() {
+    // get all ids for components Book
     const ids = this.getSharedData('ids');
     return [
-      this.script('zoom.js'),
-      `new Zoom(${ids.join(',')});`
+      this.script('/assets/book.js'),
+      `[${ids.join(',')}].forEach(id => new Book(id);`
     ];
   }
 
+  // javascript for all components Book. It will be place before tag <body> close
   js() {
     return [
-      this.script().code('console.log(23445);'),
+      'console.log("I am book in footer!!!")',
     ];
   }
 
 
   render({ id, author, name, year }) {
+    // create class via css in js
     const cl_book = this.css({
       color: 'red',
       '&:focus': {
@@ -39,8 +43,14 @@ class Book extends IgnisComp {
       }
     });
 
+    const cl_author = this.css('list-book__author', {
+      textTransform: 'capitalize'
+    });
+
+    // create class as simple string
     this.css('.list-book__name{font-size: 16px}');
 
+    // You can store shared data for specific type components(in this case Book)  which were used on page
     const ids = this.getSharedData('ids', []);
     ids.push(id);
     this.setSharedData('ids', ids);
@@ -48,7 +58,7 @@ class Book extends IgnisComp {
     return this.t`
       <div class=${cl_book}>
         <p class=list-book__name>Name: ${name}</p>
-        <p>Author: ${author}</p>
+        <p class=${cl_author}>Author: ${author}</p>
         <p>Year: ${new BookYear(year)}</p
       </div>
     `;
@@ -57,24 +67,6 @@ class Book extends IgnisComp {
 
 
 class BookYear extends IgnisComp {
-
-  headJs() {
-    return [
-      'console.log("I am code in head 1!");',
-      this.script('jquery.js').async().onload('console.log("I am loading");'),
-      'console.log("I am code in head 2!");',
-      'console.log("I am code in head 3!");',
-    ];
-  }
-
-  js() {
-    return [
-      'console.log("I am code in footer 1!");',
-      'console.log("I am code in footer 2!");',
-      'console.log("I am code in footer 3!");',
-      this.script('highcharts.js').async().onload('console.log("I am loading");')
-    ];
-  }
 
   render(year) {
     const cl_early_year = this.css({
@@ -89,6 +81,7 @@ class BookYear extends IgnisComp {
       color: 'blue',
     });
 
+    // tpl is built in library for convenient work with conditions in template
     return this.t`
       ${this.tpl
         .if(year < 1600, () => this.t`<span class=${cl_early_year}>${year}</span>`)
@@ -100,35 +93,38 @@ class BookYear extends IgnisComp {
 }
 
 
-
-
 class Page extends IgnisPage {
 
+  // set true, if you want remove spaces, comments from final html and css
   minify() {
     return false;
   }
 
+  // global style for html page
   style() {
     return [
-      this.cssLink('bulma-container.css'),
+      this.cssLink('https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma-rtl.min.css'),
       this.css('.column', { display: 'flex', borderLeft: '12px solid red' })
     ];
   }
 
-
+  // global javascript for section: It will be place in <head></head>
   headJs() {
     return [
-      this.script('stimulus.js').async()
+      this.script('https://cdnjs.cloudflare.com/ajax/libs/highcharts/9.3.2/highcharts.js')
+        .async()
+        .onload('console.log("Highcharts is loading");')
     ];
   }
 
+  // global javascript for footer. It will be place before tag <body> close
   js() {
     return [
-      this.script('react.js')
+      'console.log("I am run in end of page");',
     ];
   }
 
-
+  // It will be place in <body></body>
   body(books) {
     return this.t`
       <div class=columns>
@@ -147,4 +143,5 @@ const html = new Page([
   { id: 1, author: 'Leo Tolstoy', name: 'War and Peace', year: 1863 },
   { id: 2, author: 'Jack London', name: 'White Fang', year: 1906 }
 ]).render();
+
 console.log(html);
