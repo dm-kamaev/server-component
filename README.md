@@ -1,7 +1,7 @@
 # Server-component
 A minimalistic framework for creating reusable and encapsulated view components on server side.
-For his work, it doesn't require special parser like babel or bundler (as Webpack), because it use standard abilities o of javascript and all the power of templates function 🚀 .
-The framework use ideology of **CssInJs** for work with css.
+It doesn't require special parser like babel or bundler (as Webpack) to work, because it uses standard abilities of javascript and all the power of templates function 🚀 .
+The framework uses ideology of **CssInJs** for work with css.
 
 It was inspired by  React (JSX) and [ViewComponent](https://viewcomponent.org/).
 ### Install
@@ -16,7 +16,7 @@ const { IgnisComp, IgnisPage } = require('@ignis-web/server-component');
 
 
 ### Example
-An example of rendering an html page with a list of books, where most of the features are demonstrated.
+An example of rendering a html page with a list of books, where most of the features are demonstrated.
 ```js
 'use strict';
 
@@ -49,7 +49,7 @@ class Book extends IgnisComp {
   // javascript for all components Book. It will be place before tag <body> close
   js() {
     return [
-      'console.log("I am book in footer!!!")',
+      'console.log("I will be executed in the footer!")',
     ];
   }
 
@@ -129,7 +129,7 @@ class Page extends IgnisPage {
   // global javascript for footer. It will be place before tag <body> close
   js() {
     return [
-      'console.log("I am run in end of page");',
+      'console.log("I will be executed in the footer!");',
     ];
   }
 
@@ -168,7 +168,7 @@ class Book extends IgnisComp {
 
   js() {
     return [
-      'console.log("I am book in footer!!!")',
+      'console.log("I will be executed in the footer!")',
     ];
   }
 
@@ -184,9 +184,9 @@ class Book extends IgnisComp {
   }
 }
 ```
-`render()` is single required method.
+`render()` is a single required method.
 
-* `headJs()` - this method is intended for declaration javascript for all specific type components. Tags `<script>` will be placed in `<head></head>`
+* `headJs()` - this method is intended for declaration javascript for all specific type components (in this case for all components of "Book" type). Tags `<script>` will be placed in `<head></head>`
 * `js()` - this method is similar to `headJS()`, but tags `<script>` will be placed before tag `<body>` close
 
 ```js
@@ -215,8 +215,8 @@ class Book extends IgnisComp {
 }
 ```
 
-*  `this.setSharedData(key, value)` - We can store shared data for specific type components, which were used on page. For example, we save all ids of book and get their in declaration javascript code for using in our business logic.
-*  `this.getSharedData(key, defaultValue)` - We get shared data by key. Second argument is fallback if value is not existing not yet.
+*  `this.setSharedData(key, value)` - We can store shared data for specific type components (in this case for all components of "Book" type), which were used on the html page. For example, we save id of books and get them in declaration of javascript code for using in our business logic.
+*  `this.getSharedData(key, defaultValue)` - We get shared data by key. Second argument is fallback if value doesn't exist yet.
 
 ### CSS in JS
 ```js
@@ -261,7 +261,7 @@ You shouldn't create css inside block if/else statement:
     });
   }
 ```
-**It's not will be work!**
+**It will not work!**
 
 
 #### Tpl
@@ -283,7 +283,7 @@ class BookYear extends IgnisComp {
   }
 }
 ```
-`this.tpl` - tpl is built in library for convenient work with conditions in template. Show [docs](https://www.npmjs.com/package/@ignis-web/tpl).
+`this.tpl` - tpl is an embedded library for convenient work with conditions in template. Show [docs](https://www.npmjs.com/package/@ignis-web/tpl).
 
 
 #### Script and Link
@@ -292,23 +292,23 @@ class BookYear extends IgnisComp {
 this.cssLink('https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma-rtl.min.css')
 // <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma-rtl.min.css"/>
 ```
-Method is built in for convenient generate `<link>`.
+Method `this.cssLink` is used for convenient creation of tag `<link>`.
 
 ```js
 this.script('https://cdnjs.cloudflare.com/ajax/libs/highcharts/9.3.2/highcharts.js')
   .async()
   .onload('console.log("Highcharts is loading");')
 ```
-Method is built in for convenient generate `<script>`.
-* `this.script(src?)` - for create tag with link. Src is optional
-* `async()` - for added attribute `async`
-* `defer()` - for added attribute `defer`
-* `onload(string)` - for added attribute `onload` with passed js code
-* `code(string)` - for added js code inside `<script></script>`
+Method `this.script` is used for convenient creation of tag `<script>`.
+* `this.script(src?)` - to create tag with link. Src is optional
+* `async()` - to add attribute `async`
+* `defer()` - to add attribute `defer`
+* `onload(string)` - to add attribute `onload` with passed js code
+* `code(string)` - to add js code inside `<script></script>`
 
 
 ### Methods of `IgnisPage`
-`IgnisPage` is basing component for create  html page which contains components based on `IgnisComp`.
+`IgnisPage` is a basic component for creation of html page which contains components based on `IgnisComp`.
 ```js
 class Page extends IgnisPage {
 

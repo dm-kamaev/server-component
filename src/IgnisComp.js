@@ -98,14 +98,14 @@ module.exports = class IgnisComp {
     }
   }
 
-  t(strings, ...keys) {
+  t(statics, ...variables) {
     let out = '';
-    for (let i = 0, l = strings.length; i < l; i++) {
-      const str = strings[i];
+    for (let i = 0, l = statics.length; i < l; i++) {
+      const str = statics[i];
       out += str;
-      const value = keys[i];
-      if (value instanceof Array) {
-        value.forEach(el => {
+      const variable = variables[i];
+      if (variable instanceof Array) {
+        variable.forEach(el => {
           if (el instanceof IgnisComp) {
             out += this._getForViewComp(el);
           } else if (el instanceof CssClass) {
@@ -114,12 +114,12 @@ module.exports = class IgnisComp {
             out += el;
           }
         });
-      } else if (value instanceof IgnisComp) {
-        out += this._getForViewComp(value);
-      } else if (value instanceof CssClass) {
-        out += this._getForCssClass(value);
-      } else if (value !== undefined && value !== null) {
-        out += value;
+      } else if (variable instanceof IgnisComp) {
+        out += this._getForViewComp(variable);
+      } else if (variable instanceof CssClass) {
+        out += this._getForCssClass(variable);
+      } else if (variable !== undefined && variable !== null) {
+        out += variable;
       }
     }
     return out;
