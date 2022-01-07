@@ -1,5 +1,7 @@
 'use strict';
 
+const crypto = require('crypto');
+
 const tpl = require('@ignis-web/tpl');
 
 const CssClass = require('./CssClass');
@@ -84,7 +86,7 @@ module.exports = class IgnisComp {
         ...this.$getCompCss(),
         ...comp.$getCompCss()
       ];
-
+      console.log(name, this.$getCompJs());
       this._js = {
         head: [ ...this.$getCompJs().head, ...comp.$getCompJs().head ],
         js: [ ...this.$getCompJs().js, ...comp.$getCompJs().js ]
@@ -118,6 +120,8 @@ module.exports = class IgnisComp {
         out += this._getForViewComp(variable);
       } else if (variable instanceof CssClass) {
         out += this._getForCssClass(variable);
+      } else if (variable instanceof Object && variable !== null && variable.html) {
+        out += this._getForObjComponent(variable);
       } else if (variable !== undefined && variable !== null) {
         out += variable;
       }
@@ -153,6 +157,10 @@ module.exports = class IgnisComp {
   getCompJsAsString(){
     const list = this._js;
     const unwrap = el => el();
+    console.log({
+      head: list.head.map(unwrap),
+      js: list.js.map(unwrap),
+    });
     return {
       head: format.js(list.head.map(unwrap).flat()),
       js: format.js(list.js.map(unwrap).flat()),
@@ -192,6 +200,30 @@ module.exports = class IgnisComp {
 
   _getForViewComp(value) {
     return this.include(value);
+  }
+
+  _getForObjComponent({ headJs, js, css, html }) {
+    // Create inline component
+    const comp = {
+      _id: crypto.randomUUID(),
+      getId() {
+        return this._id;
+      },
+      $setCtx() {},
+      $getCompJs() {
+        return {
+          head: [ () => headJs ],
+          js: [ () => js ]
+        };
+      },
+      $getCompCss() {
+        return [css||''];
+      },
+      $draw() {
+        return html;
+      }
+    };
+    return this.include(comp);
   }
 
   _getForCssClass(value) {

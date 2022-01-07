@@ -29,7 +29,7 @@ class Book extends IgnisComp {
   // javascript for all components Book. It will be place before tag <body> close
   js() {
     return [
-      'console.log("I am book in footer!!!")',
+      'console.log("I am book in footer!!!");',
     ];
   }
 
@@ -93,6 +93,24 @@ class BookYear extends IgnisComp {
 }
 
 
+function funcComponent() {
+  const css = `
+    .example-description{border:1px solid red}
+  `;
+  const html = `
+    <section>
+        <header>I am functional component</header>
+        <footer class=example-description></footer>
+    </section>
+  `;
+
+  const headJs = ['console.log("I am functional component in head");'];
+  const js = ['console.log("I am functional component in footer");'];
+
+  return { headJs: headJs, js: js, html, css };
+}
+
+
 class Page extends IgnisPage {
 
   // set true, if you want remove spaces, comments from final html and css
@@ -130,12 +148,12 @@ class Page extends IgnisPage {
       <div class=columns>
         <div class=column>
           ${new ListBook(books)}
+          ${funcComponent()}
         </div>
       </div>
     `;
   }
 }
-
 
 
 

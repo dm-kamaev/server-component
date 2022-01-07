@@ -1,12 +1,13 @@
 'use strict';
 
+const Link = require('./Link');
 
 module.exports = class CssLink {
   constructor(href) {
-    this._href = href;
+    this._link = new Link(href).rel('stylesheet');
   }
 
   toString() {
-    return `<link rel="stylesheet" href="${this._href}"/>`;
+    return this._link.toString();
   }
 };
