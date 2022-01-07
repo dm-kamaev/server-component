@@ -104,7 +104,7 @@ function funcComponent() {
     </section>
   `;
 
-  const headJs = ['console.log("I am functional component in head");'];
+  const headJs = ['console.log("I am functional component in head");', ' <script>alert("1");</script>'];
   const js = ['console.log("I am functional component in footer");'];
 
   return { headJs: headJs, js: js, html, css };

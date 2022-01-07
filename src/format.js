@@ -57,6 +57,9 @@ function formatJs(list) {
     if (el instanceof Script) {
       res += tag.close();
       res += el;
+    } else if (typeof el === 'string' && el.trim().startsWith('<script>')) {
+      res += tag.close();
+      res += el;
     } else {
       res += tag.open();
       res += el;
