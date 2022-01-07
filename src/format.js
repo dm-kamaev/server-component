@@ -3,6 +3,7 @@
 const CssLink = require('./CssLink');
 const Script = require('./Script');
 const CssClass = require('./CssClass');
+const Link = require('./Link');
 
 module.exports = {
   title(title) {
@@ -35,7 +36,7 @@ function formatStyle(list) {
     if (el instanceof CssClass) {
       res += tag.open();
       res += el.getBody();
-    } else if (el instanceof CssLink) {
+    } else if (el instanceof CssLink || el instanceof Link) {
       res += tag.close();
       res += el.toString();
     } else {
