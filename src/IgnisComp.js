@@ -6,6 +6,7 @@ const tpl = require('@ignis-web/tpl');
 
 const CssClass = require('./CssClass');
 const CssLink = require('./CssLink');
+const Link = require('./Link');
 const Script = require('./Script');
 
 const format = require('./format');
@@ -184,6 +185,10 @@ module.exports = class IgnisComp {
 
   cssLink(href) {
     return new CssLink(href);
+  }
+
+  link(href) {
+    return new Link(href);
   }
 
   script(src) {

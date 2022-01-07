@@ -12,6 +12,7 @@ module.exports = class Page {
     this.t = root.t.bind(root);
     this.css = root.css.bind(root);
     this.cssLink = root.cssLink.bind(root);
+    this.link = root.link.bind(root);
     this.script = root.script.bind(root);
 
     this._data = data;
