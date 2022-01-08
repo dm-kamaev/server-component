@@ -100,7 +100,7 @@ module.exports = class Page {
 
     const style = format.style(this.style().filter(el => !(el instanceof CssClass))) + this._root.getCompCssAsString();
 
-    return this.t`
+    let page = this.t`
       <!DOCTYPE html>
       ${this.htmlTag()}
       <head>
@@ -119,6 +119,14 @@ module.exports = class Page {
       </body>
       </html>
    `;
+
+    if (this.minify()) {
+      page = page.replace(/\s+/g, ' ')
+        .replace(/>\s+</g, '><')
+        .replace(/>\s+/g, '>')
+        .replace(/\s+</g, '<');
+    }
+    return page;
   }
 };
 

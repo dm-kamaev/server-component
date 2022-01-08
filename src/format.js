@@ -7,19 +7,19 @@ const Link = require('./Link');
 
 module.exports = {
   title(title) {
-    title = title.trim().replace(/\s+/, ' ')
+    title = title.trim().replace(/\s+/g, ' ')
       .replace(/&/g, '&amp;')
       .replace(/\"/g, '\'');
     return '<title>' + title + '</title>';
   },
   description(description) {
-    description = description.trim().replace(/\s+/, ' ')
+    description = description.trim().replace(/\s+/g, ' ')
       .replace(/&/g, '&amp;')
       .replace(/\"/g, '\'');
     return '<meta name="description" content="' + description + '">';
   },
   keywords(keywords) {
-    keywords = keywords.trim().replace(/\s+/, ' ')
+    keywords = keywords.trim().replace(/\s+/g, ' ')
       .replace(/&/g, '&amp;')
       .replace(/\"/g, '\'');
     return '<meta name="keywords" content="' + keywords + '">';

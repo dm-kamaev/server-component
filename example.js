@@ -59,7 +59,7 @@ class Book extends IgnisComp {
       <div class=${cl_book}>
         <p class=list-book__name>Name: ${name}</p>
         <p class=${cl_author}>Author: ${author}</p>
-        <p>Year: ${new BookYear(year)}</p
+        <p>Year: ${new BookYear(year)}</p>
       </div>
     `;
   }
@@ -115,7 +115,28 @@ class Page extends IgnisPage {
 
   // set true, if you want remove spaces, comments from final html and css
   minify() {
-    return false;
+    return true;
+  }
+
+  keywords() {
+    return `
+      cfa,
+      cfa сертификат,
+      cfa level 1,
+      cfa exam,
+      cfa сертификат,
+      экзамен cfa,
+      подготовка к cfa level 1,
+      cfa mock exam,
+      пример теста cfa,
+      qbank cfa,
+      cfa задачи,
+      cfa вопросы,
+      тест cfa level 1,
+      cfa тест,
+      cfa экзамен подготовка,
+      cfa экзамен пример
+    `;
   }
 
 
