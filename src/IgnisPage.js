@@ -100,32 +100,32 @@ module.exports = class Page {
 
     const style = format.style(this.style().filter(el => !(el instanceof CssClass))) + this._root.getCompCssAsString();
 
-    let page = this.t`
-      <!DOCTYPE html>
-      ${this.htmlTag()}
-      <head>
-        ${format.title(this.title())}
-        ${format.description(this.description())}
-        ${format.keywords(this.keywords())}
+    let page =
+      '<!DOCTYPE html>'+
+        this.t`${this.htmlTag()}`+
+          '<head>'+
+            this.t`${this._minifyHtml(format.title(this.title()))}`+
+            this.t`${this._minifyHtml(format.description(this.description()))}`+
+            this.t`${this._minifyHtml(format.keywords(this.keywords()))}`+
 
-        ${this.head()}
+            this.t`${this.head()}`+
 
-        ${this._minifyStyle(style)}
-        ${head_js}
-      </head>
-      <body>
-        ${this._minifyHtml(body)}
-        ${js}
-      </body>
-      </html>
-   `;
+            this.t`${this._minifyStyle(style)}`+
+            this.t`${head_js}`+
+          '</head>'+
+          '<body>'+
+            this.t`${this._minifyHtml(body)}`+
+            this.t`${js}`+
+          '</body>'+
+        '</html>'
+   ;
 
-    if (this.minify()) {
-      page = page.replace(/\s+/g, ' ')
-        .replace(/>\s+</g, '><')
-        .replace(/>\s+/g, '>')
-        .replace(/\s+</g, '<');
-    }
+    // if (this.minify()) {
+    //   page = page.replace(/\s+/g, ' ')
+    //     .replace(/>\s+</g, '><')
+    //     .replace(/>\s+/g, '>')
+    //     .replace(/\s+</g, '<');
+    // }
     return page;
   }
 };
