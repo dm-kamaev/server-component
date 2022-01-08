@@ -87,7 +87,7 @@ module.exports = class IgnisComp {
         ...this.$getCompCss(),
         ...comp.$getCompCss()
       ];
-      console.log(name, this.$getCompJs());
+
       this._js = {
         head: [ ...this.$getCompJs().head, ...comp.$getCompJs().head ],
         js: [ ...this.$getCompJs().js, ...comp.$getCompJs().js ]
@@ -158,10 +158,6 @@ module.exports = class IgnisComp {
   getCompJsAsString(){
     const list = this._js;
     const unwrap = el => el();
-    console.log({
-      head: list.head.map(unwrap),
-      js: list.js.map(unwrap),
-    });
     return {
       head: format.js(list.head.map(unwrap).flat()),
       js: format.js(list.js.map(unwrap).flat()),

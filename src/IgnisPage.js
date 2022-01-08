@@ -18,6 +18,8 @@ module.exports = class Page {
     this._data = data;
   }
 
+  beforeRender() {}
+
   minify() {
     return false;
   }
@@ -88,6 +90,8 @@ module.exports = class Page {
 
 
   render(data = this._data) {
+    this.beforeRender(data);
+
     const body = this.body(data);
 
     const compJs = this._root.getCompJsAsString();
