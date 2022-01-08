@@ -20,6 +20,11 @@ module.exports = class Page {
 
   beforeRender() {}
 
+  addStyleToEnd() {
+    return [];
+  }
+
+
   minify() {
     return false;
   }
@@ -98,7 +103,11 @@ module.exports = class Page {
     const head_js = format.js(this.headJs()) + compJs.head;
     const js = format.js(this.js()) + compJs.js;
 
-    const style = format.style(this.style().filter(el => !(el instanceof CssClass))) + this._root.getCompCssAsString();
+    const ignoreCssClass = el => !(el instanceof CssClass);
+    const style =
+      format.style(this.style().filter(ignoreCssClass)) +
+      this._root.getCompCssAsString() +
+      format.style(this.addStyleToEnd().filter(ignoreCssClass));
 
     let page =
       '<!DOCTYPE html>'+

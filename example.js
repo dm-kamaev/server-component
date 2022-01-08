@@ -118,6 +118,13 @@ class Page extends IgnisPage {
     return true;
   }
 
+  addStyleToEnd() {
+    return [
+      this.cssLink('end.css'),
+      '@media screen and (max-width: 599px) {}'
+    ];
+  }
+
   keywords() {
     return `
       cfa,
