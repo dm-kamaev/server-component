@@ -217,8 +217,8 @@ module.exports = class IgnisComp {
       $setCtx() {},
       $getCompJs() {
         return {
-          head: [ () => headJs ],
-          js: [ () => js ]
+          head: headJs ? [ () => headJs ] : [],
+          js: js ? [ () => js ] : []
         };
       },
       $getCompCss() {

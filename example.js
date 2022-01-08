@@ -118,6 +118,7 @@ class Page extends IgnisPage {
     return false;
   }
 
+
   // global style for html page
   style() {
     return [
