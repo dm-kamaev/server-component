@@ -2,12 +2,9 @@
 
 const Link = require('./Link');
 
-module.exports = class CssLink {
+module.exports = class CssLink extends Link {
   constructor(href) {
-    this._link = new Link(href).rel('stylesheet').type('text/css');
-  }
-
-  toString() {
-    return this._link.toString();
+    super(href);
+    this.rel('stylesheet').type('text/css');
   }
 };

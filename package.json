@@ -1,10 +1,10 @@
 {
   "name": "@ignis-web/server-component",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "A minimalistic framework for creating reusable and encapsulated view components on server side.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npx jest"
   },
   "keywords": [
     "server component",
@@ -40,6 +40,7 @@
   "author": "dm-kamaev@rambler.ru",
   "license": "ISC",
   "dependencies": {
+    "@ignis-web/gen-css-identifier": "0.0.1",
     "@ignis-web/tpl": "1.0.0"
   },
   "devDependencies": {

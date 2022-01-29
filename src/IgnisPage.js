@@ -7,19 +7,36 @@ const format = require('./format');
 module.exports = class Page {
 
   constructor(data) {
-    const root = new IgnisComp().makeRoot();
+    const root = new IgnisComp().makeRoot({
+      ...this.generators(),
+    });
     this._root = root;
     this.t = root.t.bind(root);
     this.css = root.css.bind(root);
     this.cssLink = root.cssLink.bind(root);
     this.link = root.link.bind(root);
     this.script = root.script.bind(root);
+    this.createId = root.createId.bind(root);
+    this.createClassName = root.createClassName.bind(root);
+
+    this.tpl = root.tpl;
 
     this._data = data;
   }
 
-  beforeRender() {}
+  // hook
+  init() {}
 
+  generators() {
+    return {
+      generatorClassName: null,
+      generatorId: null,
+    };
+  }
+  // generatorClassName() {}
+  // generatorId() {}
+
+  // hook
   addStyleToEnd() {
     return [];
   }
@@ -95,7 +112,11 @@ module.exports = class Page {
 
 
   render(data = this._data) {
-    this.beforeRender(data);
+    this.init(data);
+
+    const ignoreCssClass = el => !(el instanceof CssClass);
+
+    const pageStyle = this.style().filter(ignoreCssClass);
 
     const body = this.body(data);
 
@@ -103,9 +124,8 @@ module.exports = class Page {
     const head_js = format.js(this.headJs()) + compJs.head;
     const js = format.js(this.js()) + compJs.js;
 
-    const ignoreCssClass = el => !(el instanceof CssClass);
     const style =
-      format.style(this.style().filter(ignoreCssClass)) +
+      format.style(pageStyle) +
       this._root.getCompCssAsString() +
       format.style(this.addStyleToEnd().filter(ignoreCssClass));
 
@@ -129,12 +149,6 @@ module.exports = class Page {
         '</html>'
    ;
 
-    // if (this.minify()) {
-    //   page = page.replace(/\s+/g, ' ')
-    //     .replace(/>\s+</g, '><')
-    //     .replace(/>\s+/g, '>')
-    //     .replace(/\s+</g, '<');
-    // }
     return page;
   }
 };

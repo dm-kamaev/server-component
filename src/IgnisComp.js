@@ -11,8 +11,7 @@ const Script = require('./Script');
 
 const format = require('./format');
 
-const GeneratorClassName = require('./GeneratorClassName');
-const generatoClassName = new GeneratorClassName('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
+const generator = require('./generator');
 
 module.exports = class IgnisComp {
 
@@ -33,12 +32,10 @@ module.exports = class IgnisComp {
     this.tpl = tpl;
   }
 
-  getId() {
-    return this._id;
-  }
+  // hook
+  init() {}
 
   css(...arg) {
-    // const cl_name = this.getId();
     if (this.is_reuse) {
       const comp = this._getSelfFromAggregat();
       return comp.$getCompCss(this._order_css++);
@@ -48,7 +45,7 @@ module.exports = class IgnisComp {
         obj = arg[0];
       }
       if (arg.length === 1 && arg[0] instanceof Object) {
-        const class_name = this._ctx.generatorClass();
+        const class_name = this._ctx.generatorClassName();
         obj = new CssClass(class_name, arg[0]);
       }
       if (arg.length === 2 && typeof arg[0] === 'string' && arg[1] instanceof Object) {
@@ -63,22 +60,29 @@ module.exports = class IgnisComp {
     }
   }
 
-  makeRoot(setting = {}) {
-    if (!setting.generatorClass) {
-      generatoClassName.except(['ga']);
-      setting.generatorClass = () => generatoClassName.next();
+  makeRoot(settings = {}) {
+    if (!settings.generatorClassName) {
+      settings.generatorClassName = generator.forClass();
     }
-    this._ctx = { generatorClass: setting.generatorClass, aggregator: {} };
+
+    if (!settings.generatorId) {
+      settings.generatorId = generator.forId();
+    }
+    this._ctx = {
+      generatorClassName: () => settings.generatorClassName.next(),
+      generatorId: () => settings.generatorId.next(),
+      aggregator: {}, // for cache components
+    };
     return this;
   }
 
 
   include(comp) {
-    const name = comp.getId();
+    const name = comp.$getId();
     comp.$setCtx(this._ctx);
     if (!this._ctx.aggregator[name]) {
       this._ctx.aggregator[name] = comp;
-      const html = comp.$draw(this._data);
+      const html = comp.$compile(this._data);
 
       // if (this.constructor.name === 'Container') {
       //   console.log('B this._css', this._css);
@@ -96,7 +100,7 @@ module.exports = class IgnisComp {
       return html;
     } else {
       comp.$usedRepeatedly();
-      const html = comp.$draw(this._data);
+      const html = comp.$compile(this._data);
       return html;
     }
   }
@@ -130,6 +134,12 @@ module.exports = class IgnisComp {
     return out;
   }
 
+
+  $getId() {
+    return this._id;
+  }
+
+
   $getCompCss(index) {
     return typeof index === 'number' ? this._css[index] : this._css;
   }
@@ -138,7 +148,8 @@ module.exports = class IgnisComp {
     return this._js;
   }
 
-  $draw() {
+  $compile() {
+    this.init(this._data);
     return this.render(this._data);
   }
 
@@ -149,6 +160,14 @@ module.exports = class IgnisComp {
 
   $usedRepeatedly() {
     this.is_reuse = true;
+  }
+
+  createId() {
+    return this._ctx.generatorId();
+  }
+
+  createClassName() {
+    return this._ctx.generatorClassName();
   }
 
   getCompCssAsString(){
@@ -207,7 +226,7 @@ module.exports = class IgnisComp {
     // Create inline component
     const comp = {
       _id: crypto.randomUUID(),
-      getId() {
+      $getId() {
         return this._id;
       },
       $setCtx() {},
@@ -220,7 +239,7 @@ module.exports = class IgnisComp {
       $getCompCss() {
         return [css||''];
       },
-      $draw() {
+      $compile() {
         return html;
       }
     };
@@ -232,7 +251,7 @@ module.exports = class IgnisComp {
   }
 
   _getSelfFromAggregat() {
-    const name = this.getId();
+    const name = this.$getId();
     return this._ctx?.aggregator[name];
   }
 

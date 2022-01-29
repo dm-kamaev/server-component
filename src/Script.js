@@ -3,6 +3,11 @@
 let COUNTER = 0;
 
 module.exports = class Script {
+
+  static createOnloadName() {
+    return '__onload_'+Math.floor(Date.now() + COUNTER++);
+  }
+
   constructor(src) {
     this._src = src;
     this._how_load = '';
@@ -30,7 +35,7 @@ module.exports = class Script {
 
   onload(code) {
     // TODO: generate function name
-    this._onload_func_name = '__onload_' + Math.floor(Date.now() + COUNTER++);
+    this._onload_func_name = Script.createOnloadName();
     this._onload_cb = `function ${this._onload_func_name}(){${code}}`;
     return this;
   }

@@ -9,4 +9,6 @@ module.exports = {
   CssClass: require('./src/CssClass'),
   // eslint-disable-next-line global-require
   CssLink: require('./src/CssLink'),
+  // eslint-disable-next-line global-require
+  generator: require('./src/generator'),
 };

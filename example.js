@@ -1,6 +1,7 @@
 'use strict';
 
 const { IgnisComp, IgnisPage } = require('./index');
+const GenCssIdentifier = require('@ignis-web/gen-css-identifier');
 
 
 class ListBook extends IgnisComp {
@@ -110,12 +111,20 @@ function funcComponent() {
   return { headJs: headJs, js: js, html, css };
 }
 
+// const generatorId = new GenCssIdentifier('1234');
+// const generatorClassName = new GenCssIdentifier('#$!');
 
 class Page extends IgnisPage {
+  // generatorClassName() {
+  //   return generatorClassName.next();
+  // }
 
+  // generatorId() {
+  //   return generatorId.next();
+  // }
   // set true, if you want remove spaces, comments from final html and css
   minify() {
-    return true;
+    return false;
   }
 
   addStyleToEnd() {
@@ -173,8 +182,10 @@ class Page extends IgnisPage {
 
   // It will be place in <body></body>
   body(books) {
+    const id = this.createId();
+    const cls = this.createClassName();
     return this.t`
-      <div class=columns>
+      <div id=${id} class="columns ${cls}">
         <div class=column>
           ${new ListBook(books)}
           ${funcComponent()}
