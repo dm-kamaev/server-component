@@ -184,6 +184,7 @@ class Page extends IgnisPage {
   body(books) {
     const id = this.createId();
     const cls = this.createClassName();
+
     return this.t`
       <div id=${id} class="columns ${cls}">
         <div class=column>

@@ -125,7 +125,7 @@ module.exports = class IgnisComp {
         out += this._getForViewComp(variable);
       } else if (variable instanceof CssClass) {
         out += this._getForCssClass(variable);
-      } else if (variable instanceof Object && variable !== null && variable.html) {
+      } else if (variable instanceof Object && variable !== null && typeof variable.html === 'string') {
         out += this._getForObjComponent(variable);
       } else if (variable !== undefined && variable !== null) {
         out += variable;
