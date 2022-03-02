@@ -150,7 +150,7 @@ describe('[IgnisPage.js]', function () {
       <!DOCTYPE html><html lang="EN"><head><title>Hello, I am page with IgnisComponent !</title><meta name="description" content=""><meta name="keywords" content="keywords"><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma-rtl.min.css"/><style>.column{display:flex;border-left:12px solid red;}.b{color:red;}.b:focus{background-color:orange;}.list-book__author{text-transform:capitalize;}.list-book__name{font-size: 16px}
         .refresh{border:1px solid red}
       </style><link rel="stylesheet" type="text/css" href="/assets/global-v1.css"/><style>@media screen and (max-width: 599px) { .columns{display:block}}</style><script>function onload(){console.log("Three js is loading");}</script><script src="https://unpkg.com/three@0.137.4/build/three.js" async onload="onload();"></script><script>console.log("This js code in <head></head>")</script><script>function onload(){console.log("Highcharts is loading");}</script><script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/9.3.2/highcharts.js" async onload="onload();"></script><script>console.log("I am functional component in head");</script> <script>alert("1");</script></head><body>
-          <div id=a class="columns a">
+          <div id=Z class="columns a">
             <div class=column>
 
           <div>
