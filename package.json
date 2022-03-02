@@ -40,7 +40,7 @@
   "author": "dm-kamaev@rambler.ru",
   "license": "ISC",
   "dependencies": {
-    "@ignis-web/gen-css-identifier": "0.0.1",
+    "@ignis-web/gen-css-identifier": "0.0.3",
     "@ignis-web/tpl": "1.0.2"
   },
   "devDependencies": {

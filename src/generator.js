@@ -3,7 +3,7 @@
 const GenCssIdentifier = require('@ignis-web/gen-css-identifier');
 
 const genClassName = new GenCssIdentifier('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ').except(['ga']);
-const genId = new GenCssIdentifier('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789').except(['ga']);
+const genId = new GenCssIdentifier('ZYXWVUTSRQPONMLKJIHGFEDCBAzyxwvutsrqponmlkjihgfedcba').except(['ga']);
 
 module.exports = {
   forClass() {
