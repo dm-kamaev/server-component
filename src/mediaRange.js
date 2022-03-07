@@ -19,14 +19,14 @@ module.exports = function mediaRange(input) {
     }
     const entity = els[0];
     const operator = els[1];
-    const px = els[2];
+    const value = calcLimit(operator, els[2]);
     let max_min = '';
     if (operator === '<=' || operator === '<') {
       max_min = 'max';
     } else {
       max_min = 'min';
     }
-    return `(${max_min}-${entity}:${px})`;
+    return `(${max_min}-${entity}:${value})`;
   } else if (els.length === 5) {
     return `${mediaRange(els.slice(0, 3).join(' '))} and ${mediaRange(els.slice(2, 5).join(' '))}`;
   }
@@ -41,4 +41,23 @@ function swapSymbol(els) {
     throw new Error(`Operator ${operator} is not valid`);
   }
   return [right, opposite_operator, left];
+}
+
+
+/**
+ * calcLimit
+ * @param {string} operator - >, <
+ * @param {string} input - '300px'
+ * @return 299.99px
+ */
+function calcLimit(operator, input) {
+  let output = input;
+  if (operator === '>') {
+    const { groups } = input.match(/(?<digit>\d+)(?<measurement>\w+)/);
+    output = `${groups.digit}.01${groups.measurement}`;
+  } else if (operator === '<') {
+    const { groups } = input.match(/(?<digit>\d+)(?<measurement>\w+)/);
+    output = `${groups.digit - 1}.99${groups.measurement}`;
+  }
+  return output;
 }

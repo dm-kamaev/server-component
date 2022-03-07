@@ -45,8 +45,7 @@
     "coverage-badges": "1.0.5",
     "eslint": "8.5.0",
     "eslint-plugin-unicorn": "39.0.0",
-    "jest": "27.4.5",
-    "jest-coverage-badges": "1.1.2"
+    "jest": "27.4.5"
   },
   "repository": {
     "type": "git",

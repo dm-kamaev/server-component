@@ -95,4 +95,43 @@ describe('[CssClass.js]', function () {
     expect(cl.getBody()).toBe(expected);
   });
 
+  test.each([
+    [{
+      class_name: 'article', props: {
+        backgroundColor: 'red',
+        [`@media screen and ${mediaRange('width > 300px')}`]: {
+          'font-size': '120px',
+          '&:focus': {
+            'background-color': 'green'
+          },
+        }
+      }
+    }, '.article{background-color:red;}@media screen and (min-width:300.01px){.article{font-size:120px;}.article:focus{background-color:green;}}'],
+    [{
+      class_name: 'article', props: {
+        backgroundColor: 'red',
+        [`@media screen and ${mediaRange('width < 300px')}`]: {
+          'font-size': '120px',
+          '&:focus': {
+            'background-color': 'green'
+          },
+        }
+      }
+    }, '.article{background-color:red;}@media screen and (max-width:299.99px){.article{font-size:120px;}.article:focus{background-color:green;}}'],
+    [{
+      class_name: 'article', props: {
+        backgroundColor: 'red',
+        [`@media screen and ${mediaRange('300px < width < 750px')}`]: {
+          'font-size': '120px',
+          '&:focus': {
+            'background-color': 'green'
+          },
+        }
+      }
+    }, '.article{background-color:red;}@media screen and (min-width:300.01px) and (max-width:749.99px){.article{font-size:120px;}.article:focus{background-color:green;}}'],
+  ])('calc limit for @media rules', ({ class_name, props }, expected) => {
+    const cl = new CssClass(class_name, props);
+    expect(cl.getBody()).toBe(expected);
+  });
+
 });
