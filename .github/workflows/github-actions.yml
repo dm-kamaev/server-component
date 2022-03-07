@@ -10,5 +10,5 @@ jobs:
         with:
           node-version: '14'
       - run: npm i -D
-      - run: npm test_and_badges
+      - run: npm run test_and_badges
       - run: echo "🍏 This job's status is ${{ job.status }}."
