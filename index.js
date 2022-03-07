@@ -6,9 +6,7 @@ module.exports = {
   // eslint-disable-next-line global-require
   IgnisPage: require('./src/IgnisPage'),
   // eslint-disable-next-line global-require
-  CssClass: require('./src/CssClass'),
-  // eslint-disable-next-line global-require
-  CssLink: require('./src/CssLink'),
+  mediaRange: require('./src/mediaRange'),
   // eslint-disable-next-line global-require
   generator: require('./src/generator'),
 };

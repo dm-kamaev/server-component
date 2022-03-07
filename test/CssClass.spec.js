@@ -1,6 +1,7 @@
 'use strict';
 
 const CssClass = require('../src/CssClass.js');
+const mediaRange = require('../src/mediaRange.js');
 
 describe('[CssClass.js]', function () {
 
@@ -37,7 +38,7 @@ describe('[CssClass.js]', function () {
     [{
       class_name: 'article', props: {
         backgroundColor: 'red',
-        [`@media screen and ${CssClass.mediaRange('300px <= width <= 750px')}`]: {
+        [`@media screen and ${mediaRange('300px <= width <= 750px')}`]: {
           'font-size': '120px',
           '&:focus': {
             'background-color': 'green'
@@ -48,7 +49,7 @@ describe('[CssClass.js]', function () {
     [{
       class_name: 'article', props: {
         backgroundColor: 'red',
-        [`@media screen and ${CssClass.mediaRange('300px <= width')}`]: {
+        [`@media screen and ${mediaRange('300px <= width')}`]: {
           'font-size': '120px',
           '&:focus': {
             'background-color': 'green'
@@ -59,7 +60,7 @@ describe('[CssClass.js]', function () {
     [{
       class_name: 'article', props: {
         backgroundColor: 'red',
-        [`@media screen and ${CssClass.mediaRange('width >= 300px')}`]: {
+        [`@media screen and ${mediaRange('width >= 300px')}`]: {
           'font-size': '120px',
           '&:focus': {
             'background-color': 'green'
@@ -70,7 +71,7 @@ describe('[CssClass.js]', function () {
     [{
       class_name: 'article', props: {
         backgroundColor: 'red',
-        [`@media screen and ${CssClass.mediaRange('width <= 300px')}`]: {
+        [`@media screen and ${mediaRange('width <= 300px')}`]: {
           'font-size': '120px',
           '&:focus': {
             'background-color': 'green'
@@ -81,7 +82,7 @@ describe('[CssClass.js]', function () {
     [{
       class_name: 'article', props: {
         backgroundColor: 'red',
-        [`@media screen and ${CssClass.mediaRange('300px >= width')}`]: {
+        [`@media screen and ${mediaRange('300px >= width')}`]: {
           'font-size': '120px',
           '&:focus': {
             'background-color': 'green'
