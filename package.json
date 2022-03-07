@@ -1,10 +1,11 @@
 {
   "name": "@ignis-web/server-component",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "description": "A minimalistic framework for creating reusable and encapsulated view components on server side.",
   "main": "index.js",
   "scripts": {
-    "test": "npx jest"
+    "test": "npx jest --coverage",
+    "test_and_badges": "npm test && npx jest-coverage-badges"
   },
   "keywords": [
     "server component",
@@ -44,9 +45,10 @@
     "@ignis-web/tpl": "1.0.2"
   },
   "devDependencies": {
-    "jest": "27.4.5",
     "eslint": "8.5.0",
-    "eslint-plugin-unicorn": "39.0.0"
+    "eslint-plugin-unicorn": "39.0.0",
+    "jest": "27.4.5",
+    "jest-coverage-badges": "1.1.2"
   },
   "repository": {
     "type": "git",
