@@ -1,6 +1,6 @@
 # Server-component
 
-[![Actions Status](https://github.com/dm-kamaev/server-component/workflows/Build/badge.svg)](https://github.com/dm-kamaev/server-component/actions) ![Coverage](https://github.com/dm-kamaev/server-component/badges/coverage.svg)
+[![Actions Status](https://github.com/dm-kamaev/server-component/workflows/Build/badge.svg)](https://github.com/dm-kamaev/server-component/actions) ![Coverage](https://github.com/dm-kamaev/server-component/blob/master/coverage.svg)
 
 A minimalistic framework for creating reusable and encapsulated html components on server side.
 It doesn't require special parser like babel or bundler (as Webpack) to work, because it uses standard abilities of javascript and all the power of templates function 🚀 .
