@@ -3,10 +3,7 @@
   "version": "1.0.14",
   "description": "A minimalistic framework for creating reusable and encapsulated view components on server side.",
   "main": "index.js",
-  "scripts": {
-    "test": "npx jest --coverage",
-    "test_and_badge": "npm test && npx coverage-badges"
-  },
+  "scripts": {},
   "keywords": [
     "server component",
     "simple rendering html",
