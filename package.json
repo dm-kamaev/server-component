@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "npx jest --coverage",
-    "test_and_badges": "npm test && npx jest-coverage-badges"
+    "test_and_badge": "npm test && npx coverage-badges"
   },
   "keywords": [
     "server component",
@@ -45,6 +45,7 @@
     "@ignis-web/tpl": "1.0.2"
   },
   "devDependencies": {
+    "coverage-badges": "1.0.5",
     "eslint": "8.5.0",
     "eslint-plugin-unicorn": "39.0.0",
     "jest": "27.4.5",
