@@ -1,23 +1,21 @@
-'use strict';
+import Link from './Link';
+import Script from './Script';
+import CssClass from './CssClass';
 
-const Link = require('./Link');
-const Script = require('./Script');
-const CssClass = require('./CssClass');
-
-module.exports = {
-  title(title) {
+export default {
+  title(title: string) {
     title = title.trim().replace(/\s+/g, ' ')
       .replace(/&/g, '&amp;')
       .replace(/\"/g, '\'');
     return '<title>' + title + '</title>';
   },
-  description(description) {
+  description(description: string) {
     description = description.trim().replace(/\s+/g, ' ')
       .replace(/&/g, '&amp;')
       .replace(/\"/g, '\'');
     return '<meta name="description" content="' + description + '">';
   },
-  keywords(keywords) {
+  keywords(keywords: string) {
     keywords = keywords.trim().replace(/\s+/g, ' ')
       .replace(/&/g, '&amp;')
       .replace(/\"/g, '\'');
@@ -28,7 +26,7 @@ module.exports = {
 };
 
 
-function formatStyle(list) {
+function formatStyle(list: Array<CssClass | Link | string>) {
   let res = '';
   const tag = new StateTag('<style>', '</style>');
   list.forEach(el => {
@@ -50,7 +48,7 @@ function formatStyle(list) {
 }
 
 
-function formatJs(list) {
+function formatJs(list: Array<Script | string>) {
   let res = '';
   const tag = new StateTag('<script>', '</script>');
   list.forEach(el => {
@@ -74,16 +72,15 @@ function formatJs(list) {
 
 
 class StateTag {
-  constructor(open_tag, close_tag) {
-    this.is_open_tag = false;
-    this.open_tag = open_tag;
-    this.close_tag = close_tag;
+  private _is_open_tag: boolean;
+  constructor(private open_tag, private close_tag) {
+    this._is_open_tag = false;
   }
 
   open() {
     let str = '';
-    if (!this.is_open_tag) {
-      this.is_open_tag = true;
+    if (!this._is_open_tag) {
+      this._is_open_tag = true;
       // eslint-disable-next-line no-unused-vars
       str += this.open_tag;
     }
@@ -92,8 +89,8 @@ class StateTag {
 
   close() {
     let str = '';
-    if (this.is_open_tag) {
-      this.is_open_tag = false;
+    if (this._is_open_tag) {
+      this._is_open_tag = false;
       // eslint-disable-next-line no-unused-vars
       str += this.close_tag;
     }

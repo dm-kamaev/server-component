@@ -1,12 +1,14 @@
-'use strict';
+
+type T_node<T> = {
+  [key: string]: string | {
+    [k: string]: string | T_node<T>
+  },
+};
 
 
-module.exports = class CssClass {
+export default class CssClass {
 
-  constructor(name, obj) {
-    this._name = name;
-    this._obj = obj;
-  }
+  constructor(private _name: string, private _obj: T_node<string>) {}
 
   getName() {
     return this._name;
@@ -14,22 +16,22 @@ module.exports = class CssClass {
 
   getBody() {
     let css = '';
-    let subclasses = [];
-    let media = [];
+    let subclasses: CssClass[] = [];
+    let media: Array<{ condition: string; el: CssClass }> = [];
     const obj = this._obj;
     Object.keys(obj).forEach(k => {
-      if (k.startsWith('&')) {
+      const value = obj[k];
+      if (k.startsWith('&') && typeof value !== 'string') {
         subclasses.push(
-          new CssClass(this.getName() + k.replace(/^&/, ''), obj[k])
+          new CssClass(this.getName() + k.replace(/^&/, ''), value)
         );
-      } else if (k.startsWith('@')) {
-        const value = obj[k];
+      } else if (k.startsWith('@') && typeof value !== 'string') {
         media.push({
           condition: k,
           el: new CssClass(this.getName(), value),
         });
       } else {
-        css += `${kebabize(k)}:${obj[k]};`;
+        css += `${kebabize(k)}:${value};`;
       }
     });
     return '.' + this.getName() + '{' + css + '}' + subclasses.map(el => el.getBody()).join('') + build_media_rules(media);
@@ -38,7 +40,7 @@ module.exports = class CssClass {
 };
 
 
-function kebabize(str) {
+function kebabize(str: string) {
   return str.replace(/[A-Z]+(?![a-z])|[A-Z]/g, ($, ofs) => (ofs ? '-' : '') + $.toLowerCase());
 }
 

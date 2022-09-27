@@ -1,22 +1,35 @@
-'use strict';
 
-const crypto = require('crypto');
+import crypto from 'crypto';
 
-const tpl = require('@ignis-web/tpl');
+import tpl from '@ignis-web/tpl';
 
-const CssClass = require('./CssClass');
-const CssLink = require('./CssLink');
-const Link = require('./Link');
-const Script = require('./Script');
+import CssClass from './CssClass';
+import CssLink from './CssLink';
+import Link from './Link';
+import Script from './Script';
 
-const format = require('./format');
+import format from './format';
 
-const generator = require('./generator');
+import generator from './generator';
 
-module.exports = class IgnisComp {
 
-  constructor(data) {
-    this._data = data;
+interface I_ctx {
+  generatorClassName: () => string;
+  generatorId: () => string;
+  aggregator: Record<string, IgnisComp<any>>;
+};
+
+export default class IgnisComp<D extends Record<string, any>> {
+  private _order_css: number = 0;
+  private _css: CssClass[];
+  private _js: { head: (() => Array<string | Script>)[]; js: (() => Array<string | Script>)[]; };
+  private _shared_data: Record<string, any>;
+  private _id: string;
+  public tpl: any;
+  private _is_reuse: boolean;
+  private _ctx: I_ctx;
+
+  constructor(private _data: D) {
     this._css = [];
     this._order_css = 0;
 
@@ -33,10 +46,10 @@ module.exports = class IgnisComp {
   }
 
   // hook
-  init() {}
+  init(data: D) {}
 
   css(...arg) {
-    if (this.is_reuse) {
+    if (this._is_reuse) {
       const comp = this._getSelfFromAggregat();
       return comp.$getCompCss(this._order_css++);
     } else {
@@ -60,7 +73,7 @@ module.exports = class IgnisComp {
     }
   }
 
-  makeRoot(settings = {}) {
+  makeRoot(settings: { generatorClassName?: any; generatorId?: any } = { generatorClassName: undefined, generatorId: undefined }) {
     if (!settings.generatorClassName) {
       settings.generatorClassName = generator.forClass();
     }
@@ -77,12 +90,12 @@ module.exports = class IgnisComp {
   }
 
 
-  include(comp) {
+  include(comp: IgnisComp<any>) {
     const name = comp.$getId();
     comp.$setCtx(this._ctx);
     if (!this._ctx.aggregator[name]) {
       this._ctx.aggregator[name] = comp;
-      const html = comp.$compile(this._data);
+      const html = comp.$compile();
 
       // if (this.constructor.name === 'Container') {
       //   console.log('B this._css', this._css);
@@ -100,7 +113,7 @@ module.exports = class IgnisComp {
       return html;
     } else {
       comp.$usedRepeatedly();
-      const html = comp.$compile(this._data);
+      const html = comp.$compile();
       return html;
     }
   }
@@ -139,10 +152,11 @@ module.exports = class IgnisComp {
     return this._id;
   }
 
-
-  $getCompCss(index) {
+  $getCompCss(): CssClass[];
+  $getCompCss(index: number): CssClass;
+  $getCompCss(index?: number) {
     return typeof index === 'number' ? this._css[index] : this._css;
-  }
+  };
 
   $getCompJs() {
     return this._js;
@@ -153,13 +167,17 @@ module.exports = class IgnisComp {
     return this.render(this._data);
   }
 
-  $setCtx(ctx) {
+  render(_data: D) {
+    throw new Error("Method not implemented.");
+  }
+
+  $setCtx(ctx: I_ctx) {
     this._ctx = ctx;
     return this;
   }
 
   $usedRepeatedly() {
-    this.is_reuse = true;
+    this._is_reuse = true;
   }
 
   createId() {
@@ -192,65 +210,65 @@ module.exports = class IgnisComp {
     }
   }
 
-  getSharedData(key, fallback) {
+  getSharedData<T>(key: string, fallback?: T) {
     const comp = this._getSelfFromAggregat();
     const shared_data = comp ? comp._shared_data : this._shared_data;
     return shared_data[key] || fallback;
   }
 
-  cssLink(href) {
+  cssLink(href: string) {
     return new CssLink(href);
   }
 
-  link(href) {
+  link(href: string) {
     return new Link(href);
   }
 
-  script(src) {
+  script(src: string) {
     return new Script(src);
   }
 
-  headJs() {
+  headJs(): Array<string | Script> {
     return [];
   }
 
-  js() {
+  js(): Array<string | Script> {
     return [];
   }
 
-  _getForViewComp(value) {
+  private _getForViewComp(value: IgnisComp<any>) {
     return this.include(value);
   }
 
-  _getForObjComponent({ headJs, js, css, html }) {
+  private _getForObjComponent({ headJs, js, css, html }) {
     // Create inline component
     const comp = {
       _id: crypto.randomUUID(),
       $getId() {
         return this._id;
       },
-      $setCtx() {},
+      $setCtx() { },
       $getCompJs() {
         return {
-          head: headJs ? [ () => headJs ] : [],
-          js: js ? [ () => js ] : []
+          head: headJs ? [() => headJs] : [],
+          js: js ? [() => js] : []
         };
       },
       $getCompCss() {
-        return [css||''];
+        return [css || ''];
       },
       $compile() {
         return html;
       }
-    };
+    } as unknown as IgnisComp<any>;
     return this.include(comp);
   }
 
-  _getForCssClass(value) {
+  private _getForCssClass(value: CssClass) {
     return value.getName();
   }
 
-  _getSelfFromAggregat() {
+  private _getSelfFromAggregat() {
     const name = this.$getId();
     return this._ctx?.aggregator[name];
   }
@@ -258,17 +276,18 @@ module.exports = class IgnisComp {
 };
 
 
-function _getCallerFile() {
+
+function _getCallerFile(): string {
   let filename;
 
   let _pst = Error.prepareStackTrace;
   Error.prepareStackTrace = function (_err, stack) { return stack; };
   try {
-    let err = new Error();
+    let err: { stack: { getFileName: () => string }[] } = new Error() as any;
     let callerfile;
     let currentfile;
 
-    currentfile = err.stack.shift().getFileName();
+    currentfile = err.stack.shift()?.getFileName();
 
     while (err.stack.length) {
       callerfile = err.stack.shift();

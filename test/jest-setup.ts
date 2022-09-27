@@ -1,4 +1,16 @@
-const { diffStringsUnified } = require('jest-diff');
+import { diffStringsUnified } from 'jest-diff';
+
+export {};
+
+declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
+  namespace jest {
+    interface Matchers<R> {
+      // toBeOdd(): R;
+      toBeEqualStr(content: string): R;
+    }
+  }
+}
 
 expect.extend({
   toBeEqualStr(input, received) {
@@ -21,3 +33,5 @@ expect.extend({
 function formater(str) {
   return str.replace(/\s+/g, ' ').trim();
 }
+
+

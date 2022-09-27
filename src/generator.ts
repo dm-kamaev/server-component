@@ -1,11 +1,10 @@
-'use strict';
 
-const GenCssIdentifier = require('@ignis-web/gen-css-identifier');
+import GenCssIdentifier from '@ignis-web/gen-css-identifier';
 
 const genClassName = new GenCssIdentifier('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ').except(['ga']);
 const genId = new GenCssIdentifier('ZYXWVUTSRQPONMLKJIHGFEDCBAzyxwvutsrqponmlkjihgfedcba').except(['ga']);
 
-module.exports = {
+export default {
   forClass() {
     return genClassName;
   },

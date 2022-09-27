@@ -1,26 +1,17 @@
 'use strict';
 
-const { IgnisComp, IgnisPage } = require('../../index');
-const Script = require('../../src/Script');
-
-const GenCssIdentifier = require('@ignis-web/gen-css-identifier');
-
+import { IgnisComp, IgnisPage } from '../../index';
+import Script from '../../src/Script';
 
 describe('[IgnisPage.js]', function () {
-  let generatorId;
-  let generatorClassName;
-
 
   beforeAll(() => {
     Script.createOnloadName = () => 'onload';
-    generatorId = new GenCssIdentifier('987');
-    generatorClassName = new GenCssIdentifier('#$!');
-
   });
 
   it('whole html page', async function () {
-    class ListBook extends IgnisComp {
-      render(books) {
+    class ListBook extends IgnisComp<{ id: number, author: string, name: string, year: number }[]> {
+      render(books: { id: number, author: string, name: string, year: number }[]) {
         return this.t`
           <div>
             <p>Count: ${books.length}</p>
@@ -30,7 +21,7 @@ describe('[IgnisPage.js]', function () {
       }
     }
 
-    class Book extends IgnisComp {
+    class Book extends IgnisComp<{ id: number, author: string, name: string, year: number }> {
 
       headJs() {
         return [
@@ -48,7 +39,7 @@ describe('[IgnisPage.js]', function () {
         ];
       }
 
-      render({ id, author, name, year }) {
+      render({ id, author, name, year }: { id: number, author: string, name: string, year: number }) {
         const cl_book = this.css({
           color: 'red',
           '&:focus': {
@@ -74,17 +65,10 @@ describe('[IgnisPage.js]', function () {
       }
     }
 
-    class Page extends IgnisPage {
+    class Page extends IgnisPage<{ id: number, author: string, name: string, year: number }[]> {
 
       minify() {
         return false;
-      }
-
-      generators() {
-        return {
-          generatorId,
-          generatorClassName
-        };
       }
 
       addStyleToEnd() {
@@ -126,7 +110,7 @@ describe('[IgnisPage.js]', function () {
       }
 
       // It will be place in <body></body>
-      body(books) {
+      body(books: { id: number, author: string, name: string, year: number }[]) {
         const id = this.createId();
         const cls = this.createClassName();
         return this.t`
@@ -140,7 +124,7 @@ describe('[IgnisPage.js]', function () {
       }
     }
 
-    function funcComponent(text) {
+    function funcComponent(text: string) {
       const css = `
         .refresh{border:1px solid red}
       `;
@@ -161,23 +145,24 @@ describe('[IgnisPage.js]', function () {
       { id: 2, author: 'Jack London', name: 'White Fang', year: 1906 }
     ]).render();
 
+
     expect(html).toBeEqualStr(`
-      <!DOCTYPE html><html lang="EN"><head><title>Hello, I am page with IgnisComponent !</title><meta name="description" content=""><meta name="keywords" content="keywords"><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma-rtl.min.css"/><style>.column{display:flex;border-left:12px solid red;}.\${color:red;}.\$:focus{background-color:orange;}.list-book__author{text-transform:capitalize;}.list-book__name{font-size: 16px}
+      <!DOCTYPE html><html lang="EN"><head><title>Hello, I am page with IgnisComponent !</title><meta name="description" content=""><meta name="keywords" content="keywords"><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma-rtl.min.css"/><style>.column{display:flex;border-left:12px solid red;}.b{color:red;}.b:focus{background-color:orange;}.list-book__author{text-transform:capitalize;}.list-book__name{font-size: 16px}
         .refresh{border:1px solid red}
       </style><link rel="stylesheet" type="text/css" href="/assets/global-v1.css"/><style>@media screen and (max-width: 599px) { .columns{display:block}}</style><script>function onload(){console.log("Three js is loading");}</script><script src="https://unpkg.com/three@0.137.4/build/three.js" async onload="onload();"></script><script>console.log("This js code in <head></head>")</script><script>function onload(){console.log("Highcharts is loading");}</script><script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/9.3.2/highcharts.js" async onload="onload();"></script><script>console.log("I am functional component in head");</script> <script>alert("1");</script></head><body>
-          <div id=9 class="columns #">
+          <div id=Z class="columns a">
             <div class=column>
 
           <div>
             <p>Count: 2</p>
 
-          <div id=1 class=$>
+          <div id=1 class=b>
             <p class=list-book__name>Name: War and Peace</p>
             <p class=list-book__author>Author: Leo Tolstoy</p>
             <p>Year: 1863</p>
           </div>
 
-          <div id=2 class=$>
+          <div id=2 class=b>
             <p class=list-book__name>Name: White Fang</p>
             <p class=list-book__author>Author: Jack London</p>
             <p>Year: 1906</p>

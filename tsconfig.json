@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "target": "ES2019",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "types": [
+      "node",
+      "jest"
+    ],
+    // "outDir": "dist",
+    // "rootDirs": [
+    //   "./api/",
+    //   "./config/",
+    //   "./cron/"
+    // ],
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "strict": true,
+    "noImplicitAny": false,
+    "noImplicitThis": false,
+    "strictPropertyInitialization": false,
+    "allowJs": false,
+    "declaration": true,
+    "sourceMap": true,
+    "outDir": "dist"
+  },
+  "exclude": [
+    "node_modules",
+  ]
+}

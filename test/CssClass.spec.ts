@@ -1,7 +1,5 @@
-'use strict';
-
-const CssClass = require('../src/CssClass.js');
-const mediaRange = require('../src/mediaRange.js');
+import CssClass from '../src/CssClass';
+import mediaRange from '../src/mediaRange';
 
 describe('[CssClass.js]', function () {
 

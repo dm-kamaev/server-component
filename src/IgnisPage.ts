@@ -1,13 +1,23 @@
-'use strict';
+import IgnisComp from './IgnisComp';
+import CssClass from './CssClass';
+import format from './format';
+import Script from './Script';
+import CssLink from './CssLink';
+import Link from './Link';
 
-const IgnisComp = require('./IgnisComp');
-const CssClass = require('./CssClass');
-const format = require('./format');
+export default class Page<D extends Record<string, any>> {
+  t: (statics: any, ...variables: any[]) => string;
+  css: (...arg: any[]) => any;
+  cssLink: (href: string) => ReturnType<IgnisComp<any>['cssLink']>;
+  link: (href: string) => ReturnType<IgnisComp<any>['link']>;
+  script: (src: string) => ReturnType<IgnisComp<any>['script']>;
+  createId: () => string;
+  createClassName: () => string;
+  tpl: any;
+  private _root: IgnisComp<Record<string, any>>;
 
-module.exports = class Page {
-
-  constructor(data) {
-    const root = new IgnisComp().makeRoot({
+  constructor(private _data: D) {
+    const root = new IgnisComp({}).makeRoot({
       ...this.generators(),
     });
     this._root = root;
@@ -21,11 +31,10 @@ module.exports = class Page {
 
     this.tpl = root.tpl;
 
-    this._data = data;
   }
 
   // hook
-  init() {}
+  init(data: D) {}
 
   generators() {
     return {
@@ -37,7 +46,7 @@ module.exports = class Page {
   // generatorId() {}
 
   // hook
-  addStyleToEnd() {
+  addStyleToEnd(): Array<CssLink | string> {
     return [];
   }
 
@@ -70,19 +79,19 @@ module.exports = class Page {
     return '';
   }
 
-  style() {
+  style(): Array<CssLink | Link> {
     return [];
   }
 
-  headJs() {
+  headJs(): Array<string | Script> {
     return [];
   }
 
-  js() {
+  js(): Array<Script | string> {
     return [];
   }
 
-  _minifyStyle(css) {
+  _minifyStyle(css: string) {
     if (this.minify()) {
       return css.replace(/\/\*[^\/\*\*\/]+\*\//g, '') // коментарии вида /**/
         .replace(/\s+/g, ' ')
@@ -98,7 +107,7 @@ module.exports = class Page {
     }
   }
 
-  _minifyHtml(html) {
+  _minifyHtml(html: string) {
     if (this.minify()) {
       return html.replace(/\s+/g, ' ') // нельзя слитно ибо аттрибуты тэгов должны иметь пробелы
         .replace(/>\s+</g, '><')
@@ -118,7 +127,7 @@ module.exports = class Page {
 
     const pageStyle = this.style().filter(ignoreCssClass);
 
-    const body = this.body(data);
+    const body = this.body(data) as unknown as string;
 
     const compJs = this._root.getCompJsAsString();
     const head_js = format.js(this.headJs()) + compJs.head;
@@ -150,6 +159,10 @@ module.exports = class Page {
    ;
 
     return page;
+  }
+
+  body(data: D) {
+    throw new Error('Method not implemented.');
   }
 };
 

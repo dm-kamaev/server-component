@@ -1,12 +1,16 @@
-publish:
+publish: build
 	npm publish --access public
 
 test:
 	npx jest --coverage
 
-make_badge: test
+check:
+	npx tsc --noEmit
+
+build:
+	npx tsc
+
+create_badge:
 	npx coverage-badges;
-	rm -f coverage.svg;
-	cp ./badges/coverage.svg ./coverage.svg;
 
 .PHONY: test

@@ -1,7 +1,7 @@
 'use strict';
 
-const { IgnisComp } = require('../../index');
-const Script = require('../../src/Script');
+import { IgnisComp } from '../../index';
+import Script from '../../src/Script';
 
 describe('[IgnisComp.js]', function () {
 
@@ -9,8 +9,8 @@ describe('[IgnisComp.js]', function () {
     Script.createOnloadName = () => 'onload';
   });
 
-  it('shared state', async function () {
-    class ListBook extends IgnisComp {
+  it('functional component', async function () {
+    class ListBook extends IgnisComp<{ id: number, author: string, name: string, year: number }[]> {
       render(books) {
         return this.t`
           <div>
@@ -21,7 +21,7 @@ describe('[IgnisComp.js]', function () {
       }
     }
 
-    class Book extends IgnisComp {
+    class Book extends IgnisComp<{ id: number, author: string, name: string, year: number }> {
 
       headJs() {
         const ids = this.getSharedData('ids');
@@ -67,10 +67,25 @@ describe('[IgnisComp.js]', function () {
           <div id=${id} class=${cl_book}>
             <p class=list-book__name>Name: ${name}</p>
             <p class=${cl_author}>Author: ${author}</p>
-            <p>Year: ${year}</p>
+            ${funcComponent(year)}
           </div>
         `;
       }
+
+    }
+
+    function funcComponent(year) {
+      const css = `
+        .book-year{border:1px solid red}
+      `;
+      const html = `
+          <p class=book-year>Year: ${year}</p>
+      `;
+
+      const headJs = ['console.log("I am functional component in head");', ' <script>alert("1");</script>'];
+      const js = ['console.log("I am functional component in footer");'];
+
+      return { headJs: headJs, js: js, html, css };
     }
 
     const comp = new ListBook([
@@ -85,28 +100,29 @@ describe('[IgnisComp.js]', function () {
       <div id=1 class=a>
         <p class=list-book__name>Name: War and Peace</p>
         <p class=list-book__author>Author: Leo Tolstoy</p>
-        <p>Year: 1863</p>
+        <p class=book-year>Year: 1863</p>
       </div>
 
       <div id=2 class=a>
         <p class=list-book__name>Name: White Fang</p>
         <p class=list-book__author>Author: Jack London</p>
-        <p>Year: 1906</p>
+        <p class=book-year>Year: 1906</p>
       </div>
 
       </div>`);
 
+    // console.log(comp.getCompCssAsString());
     expect(comp.getCompCssAsString()).toBeEqualStr(
-      '<style>.a{color:red;}.a:focus{background-color:orange;}.list-book__author{text-transform:capitalize;}.list-book__name{font-size: 16px}</style>'
+      '<style>.a{color:red;}.a:focus{background-color:orange;}.list-book__author{text-transform:capitalize;}.list-book__name{font-size: 16px} .book-year{border:1px solid red} </style>'
     );
 
     const { head, js } = comp.getCompJsAsString();
 
     expect(head).toBe(
-      '<script>console.log("This js code in <head></head>")</script><script>function onload(){console.log("Highcharts is loading");}</script><script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/9.3.2/highcharts.js" async onload="onload();"></script><script>[1,2].forEach(id => new Book(id);</script>'
+      '<script>console.log("This js code in <head></head>")</script><script>function onload(){console.log("Highcharts is loading");}</script><script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/9.3.2/highcharts.js" async onload="onload();"></script><script>[1,2].forEach(id => new Book(id);console.log("I am functional component in head");</script> <script>alert("1");</script>'
     );
     expect(js).toBe(
-      '<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.js"></script><script>console.log("This js code before </body>");console.log("book ids = ", [1,2]);</script>'
+      '<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.js"></script><script>console.log("This js code before </body>");console.log("book ids = ", [1,2]);console.log(\"I am functional component in footer\");</script>'
     );
 
   });

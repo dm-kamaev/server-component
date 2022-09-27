@@ -1,7 +1,7 @@
 'use strict';
 
-const { IgnisComp } = require('../../index');
-const Script = require('../../src/Script');
+import { IgnisComp } from '../../index';
+import Script from '../../src/Script';
 
 describe('[IgnisComp.js]', function () {
 
@@ -10,8 +10,8 @@ describe('[IgnisComp.js]', function () {
   });
 
   it('render list', async function () {
-    class ListBook extends IgnisComp {
-      render(books) {
+    class ListBook extends IgnisComp<{ id: number, author: string, name: string, year: number }[]> {
+      render(books: { id: number, author: string, name: string, year: number }[]) {
         return this.t`
           <div>
             <p>Count: ${books.length}</p>
@@ -21,7 +21,7 @@ describe('[IgnisComp.js]', function () {
       }
     }
 
-    class Book extends IgnisComp {
+    class Book extends IgnisComp<{ id: number, author: string, name: string, year: number }> {
 
       headJs() {
         return [
@@ -39,7 +39,7 @@ describe('[IgnisComp.js]', function () {
         ];
       }
 
-      render({ id, author, name, year }) {
+      render({ id, author, name, year }: { id: number, author: string, name: string, year: number }) {
         const cl_book = this.css({
           color: 'red',
           '&:focus': {

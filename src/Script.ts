@@ -1,21 +1,16 @@
-'use strict';
-
 let COUNTER = 0;
 
-module.exports = class Script {
+export default class Script {
+  private _how_load: string = '';
+  private _code: string = '';
+  private _onload_func_name: string = '';
+  private _onload_cb: null | string = null;
 
   static createOnloadName() {
     return '__onload_'+Math.floor(Date.now() + COUNTER++);
   }
 
-  constructor(src) {
-    this._src = src;
-    this._how_load = '';
-    this._code = '';
-
-    this._onload_func_name = '';
-    this._onload_cb = null;
-  }
+  constructor(private _src: string) {}
 
   async() {
     this._how_load = ' async';
@@ -27,20 +22,20 @@ module.exports = class Script {
     return this;
   }
 
-  code(code) {
+  code(code: string) {
     this._code = code;
     return this;
   }
 
 
-  onload(code) {
+  onload(code: string) {
     // TODO: generate function name
     this._onload_func_name = Script.createOnloadName();
     this._onload_cb = `function ${this._onload_func_name}(){${code}}`;
     return this;
   }
 
-  _if(val, template) {
+  _if(val: string, template: string) {
     return val ? template : '';
   }
 

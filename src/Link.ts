@@ -1,37 +1,39 @@
-'use strict';
 
 
-module.exports = class Link {
-  constructor(href) {
-    this._href = href;
-  }
+export default class Link {
+  private _charset: string;
+  private _media: string;
+  private _rel: string;
+  private _sizes: string;
+  private _type: string;
+  constructor(private _href: string) {}
 
-  charset(charset) {
+  charset(charset: string) {
     this._charset = charset;
     return this;
   }
 
-  media(media) {
+  media(media: string) {
     this._media = media;
     return this;
   }
 
-  rel(rel) {
+  rel(rel: string) {
     this._rel = rel;
     return this;
   }
 
-  sizes(sizes) {
+  sizes(sizes: string) {
     this._sizes = sizes;
     return this;
   }
 
-  type(type) {
+  type(type: string) {
     this._type = type;
     return this;
   }
 
-  _if(val, template) {
+  _if(val: string, template: string) {
     return val ? template : '';
   }
 
