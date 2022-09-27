@@ -8,6 +8,7 @@ check:
 	npx tsc --noEmit
 
 build:
+	rm -rf dist;
 	npx tsc
 
 create_badge:
