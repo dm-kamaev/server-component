@@ -9,9 +9,12 @@ describe('[CompToTurboHtml.ts]', function () {
 
   it('render as object { id, html, css, js }', function () {
     class ListBook extends IgnisComp<{ id: number, author: string, name: string, year: number }[]> {
+
       render(books: { id: number, author: string, name: string, year: number }[]) {
+
         this.css('@media screen and (max-width: 599px) { .columns{display:block}}');
         this.css('.column{display:flex;border-left:12px solid red;}');
+        this.css(this.cssLink('https://cdn.jsdelivr.net/npm/@mdi/font@6.4.95/css/materialdesignicons.min.css'));
         return this.t`
         <div id=${this.createId()} class=${this.createClassName()}>
           <p>Count: ${books.length}</p>
@@ -112,7 +115,7 @@ describe('[CompToTurboHtml.ts]', function () {
     `);
 
     expect(data.css).toBeEqualStr(`
-        <style>@media screen and (max-width: 599px) { .columns{display:block}}.column{display:flex;border-left:12px solid red;}.b{color:red;}.b:focus{background-color:orange;}.list-book__author{text-transform:capitalize;}.list-book__name{font-size: 16px}
+        <style>@media screen and (max-width: 599px) { .columns{display:block}}.column{display:flex;border-left:12px solid red;}</style><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@mdi/font@6.4.95/css/materialdesignicons.min.css"/><style>.b{color:red;}.b:focus{background-color:orange;}.list-book__author{text-transform:capitalize;}.list-book__name{font-size: 16px}
         .refresh{border:1px solid red}
       </style>
     `);

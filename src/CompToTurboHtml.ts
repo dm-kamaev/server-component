@@ -52,6 +52,7 @@ export default class CompToTurboHtml {
   render() {
     const comp = this._get_comp();
     const body = this.t`${comp}`;
+
     const style = comp.getCompCssAsString();
     const { head, js } = comp.getCompJsAsString();
 

@@ -27,7 +27,7 @@ type I_functional_comp = { headJs?: string[], js?: string[], css?: string, html:
  */
 export default class IgnisComp<D, S extends Record<string, any> = Record<string, any>> {
   private _order_css: number = 0;
-  private _css: CssClass[];
+  private _css: Array<string | Link | CssClass>;
   private _js: { head: (() => Array<string | Script>)[]; js: (() => Array<string | Script>)[]; };
   private _shared_data: S = {} as S;
   private _id: string;
@@ -53,6 +53,7 @@ export default class IgnisComp<D, S extends Record<string, any> = Record<string,
   init(data: D) {}
 
   css(css: string): CssClass;
+  css(css: Link): Link;
   css(css: T_node<string>): CssClass;
   css(className: string, css: T_node<string>): CssClass;
   css(...arg) {
@@ -60,18 +61,22 @@ export default class IgnisComp<D, S extends Record<string, any> = Record<string,
       const comp = this._getSelfFromAggregat();
       return comp.$getCompCss(this._order_css++);
     } else {
-      let obj;
-      if (arg.length === 1 && typeof arg[0] === 'string') {
-        obj = arg[0];
-      }
-      if (arg.length === 1 && arg[0] instanceof Object) {
+      let obj: string | Link | CssClass;
+      const has_one_param = arg.length === 1;
+      const first_param = arg[0];
+      const second_param = arg[1];
+      if ((has_one_param && typeof first_param === 'string') || (has_one_param && first_param instanceof Link)) {
+        obj = first_param;
+      } else if (has_one_param && first_param instanceof Object) {
         const class_name = this._ctx.generatorClassName();
-        obj = new CssClass(class_name, arg[0]);
-      }
-      if (arg.length === 2 && typeof arg[0] === 'string' && arg[1] instanceof Object) {
-        const class_name = arg[0].replace(/^\./, '');
+        obj = new CssClass(class_name, first_param);
+      } else if (arg.length === 2 && typeof first_param === 'string' && second_param instanceof Object) {
+        const class_name = first_param.replace(/^\./, '');
         obj = new CssClass(class_name, arg[1]);
+      } else {
+        throw new Error(`Invalid arguments: ${arg.join(', ')}`);
       }
+
       // if (cl_name === 'User') {
       //   console.log('origin', obj);
       // }
@@ -156,8 +161,8 @@ export default class IgnisComp<D, S extends Record<string, any> = Record<string,
     return this._id;
   }
 
-  $getCompCss(): CssClass[];
-  $getCompCss(index: number): CssClass;
+  $getCompCss(): Array<string | Link | CssClass>;
+  $getCompCss(index: number): string | Link | CssClass;
   $getCompCss(index?: number) {
     return typeof index === 'number' ? this._css[index] : this._css;
   };
@@ -171,7 +176,7 @@ export default class IgnisComp<D, S extends Record<string, any> = Record<string,
     return this.render(this._data);
   }
 
-  render(_data: D) {
+  render(_data: D): string {
     throw new Error("Method not implemented.");
   }
 

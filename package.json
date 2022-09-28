@@ -1,6 +1,6 @@
 {
   "name": "@ignis-web/server-component",
-  "version": "1.0.16",
+  "version": "1.0.17",
   "description": "A minimalistic framework for creating reusable and encapsulated view components on server side.",
   "main": "dist/index.js",
   "scripts": {},
