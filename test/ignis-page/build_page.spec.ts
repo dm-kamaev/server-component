@@ -1,5 +1,3 @@
-'use strict';
-
 import { IgnisComp, IgnisPage } from '../../index';
 import Script from '../../src/Script';
 

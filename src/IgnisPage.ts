@@ -4,8 +4,9 @@ import format from './format';
 import Script from './Script';
 import CssLink from './CssLink';
 import Link from './Link';
+import Minify from './Minify';
 
-export default class Page<D extends Record<string, any>> {
+export default class IgnisPage<D> {
   t: (statics: any, ...variables: any[]) => string;
   css: (...arg: any[]) => any;
   cssLink: (href: string) => ReturnType<IgnisComp<any>['cssLink']>;
@@ -15,6 +16,7 @@ export default class Page<D extends Record<string, any>> {
   createClassName: () => string;
   tpl: any;
   private _root: IgnisComp<Record<string, any>>;
+  private _minify: Minify;
 
   constructor(private _data: D) {
     const root = new IgnisComp({}).makeRoot({
@@ -31,10 +33,11 @@ export default class Page<D extends Record<string, any>> {
 
     this.tpl = root.tpl;
 
+    this._minify = new Minify(this.minify());
   }
 
   // hook
-  init(data: D) {}
+  protected init(data: D) {}
 
   generators() {
     return {
@@ -79,7 +82,7 @@ export default class Page<D extends Record<string, any>> {
     return '';
   }
 
-  style(): Array<CssLink | Link> {
+  style(): Array<string | CssLink | Link> {
     return [];
   }
 
@@ -87,36 +90,8 @@ export default class Page<D extends Record<string, any>> {
     return [];
   }
 
-  js(): Array<Script | string> {
+  js(): Array<string | Script> {
     return [];
-  }
-
-  _minifyStyle(css: string) {
-    if (this.minify()) {
-      return css.replace(/\/\*[^\/\*\*\/]+\*\//g, '') // коментарии вида /**/
-        .replace(/\s+/g, ' ')
-        .replace(/\s+{\s+/g, '{')
-        .replace(/\s+}\s+/g, '}')
-        .replace(/;\s+/g, ';')
-        .replace(/:\s+/g, ':')
-        .replace(/{\s+/g, '{')
-        .replace(/\s+}/g, '}')
-        .trim();
-    } else {
-      return css;
-    }
-  }
-
-  _minifyHtml(html: string) {
-    if (this.minify()) {
-      return html.replace(/\s+/g, ' ') // нельзя слитно ибо аттрибуты тэгов должны иметь пробелы
-        .replace(/>\s+</g, '><')
-        .replace(/>\s+/g, '>')
-        .replace(/\s+</g, '<')
-        .trim();
-    } else {
-      return html;
-    }
   }
 
 
@@ -138,21 +113,21 @@ export default class Page<D extends Record<string, any>> {
       this._root.getCompCssAsString() +
       format.style(this.addStyleToEnd().filter(ignoreCssClass));
 
-    let page =
+    const page =
       '<!DOCTYPE html>'+
         this.t`${this.htmlTag()}`+
           '<head>'+
-            this.t`${this._minifyHtml(format.title(this.title()))}`+
-            this.t`${this._minifyHtml(format.description(this.description()))}`+
-            this.t`${this._minifyHtml(format.keywords(this.keywords()))}`+
+            this.t`${this._minify.html(format.title(this.title()))}`+
+            this.t`${this._minify.html(format.description(this.description()))}`+
+            this.t`${this._minify.html(format.keywords(this.keywords()))}`+
 
             this.t`${this.head()}`+
 
-            this.t`${this._minifyStyle(style)}`+
+            this.t`${this._minify.style(style)}`+
             this.t`${head_js}`+
           '</head>'+
           '<body>'+
-            this.t`${this._minifyHtml(body)}`+
+            this.t`${this._minify.html(body)}`+
             this.t`${js}`+
           '</body>'+
         '</html>'
@@ -161,7 +136,7 @@ export default class Page<D extends Record<string, any>> {
     return page;
   }
 
-  body(data: D) {
+  protected body(data: D) {
     throw new Error('Method not implemented.');
   }
 };

@@ -1,5 +1,5 @@
 
-type T_node<T> = {
+export type T_node<T> = {
   [key: string]: string | {
     [k: string]: string | T_node<T>
   },

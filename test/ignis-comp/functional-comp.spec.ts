@@ -21,7 +21,7 @@ describe('[IgnisComp.js]', function () {
       }
     }
 
-    class Book extends IgnisComp<{ id: number, author: string, name: string, year: number }> {
+    class Book extends IgnisComp<{ id: number, author: string, name: string, year: number }, { ids: number[] }> {
 
       headJs() {
         const ids = this.getSharedData('ids');
@@ -43,7 +43,7 @@ describe('[IgnisComp.js]', function () {
         ];
       }
 
-      render({ id, author, name, year }) {
+      render({ id, author, name, year }: { id: number, author: string, name: string, year: number }) {
         const cl_book = this.css({
           color: 'red',
           '&:focus': {
@@ -85,7 +85,7 @@ describe('[IgnisComp.js]', function () {
       const headJs = ['console.log("I am functional component in head");', ' <script>alert("1");</script>'];
       const js = ['console.log("I am functional component in footer");'];
 
-      return { headJs: headJs, js: js, html, css };
+      return { headJs, js, html, css };
     }
 
     const comp = new ListBook([

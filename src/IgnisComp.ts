@@ -3,14 +3,14 @@ import crypto from 'crypto';
 
 import tpl from '@ignis-web/tpl';
 
-import CssClass from './CssClass';
+import CssClass, { T_node } from './CssClass';
 import CssLink from './CssLink';
 import Link from './Link';
 import Script from './Script';
 
 import format from './format';
 
-import generator from './generator';
+import generator, { I_gen_css_identifier } from './generator';
 
 
 interface I_ctx {
@@ -19,11 +19,17 @@ interface I_ctx {
   aggregator: Record<string, IgnisComp<any>>;
 };
 
-export default class IgnisComp<D extends Record<string, any>> {
+type I_functional_comp = { headJs?: string[], js?: string[], css?: string, html: string };
+
+/**
+ * D - type for data for render;
+ * S - optional type for sharedData;
+ */
+export default class IgnisComp<D, S extends Record<string, any> = Record<string, any>> {
   private _order_css: number = 0;
   private _css: CssClass[];
   private _js: { head: (() => Array<string | Script>)[]; js: (() => Array<string | Script>)[]; };
-  private _shared_data: Record<string, any>;
+  private _shared_data: S = {} as S;
   private _id: string;
   public tpl: any;
   private _is_reuse: boolean;
@@ -34,8 +40,6 @@ export default class IgnisComp<D extends Record<string, any>> {
     this._order_css = 0;
 
     this._js = { head: [() => this.headJs()], js: [() => this.js()] };
-
-    this._shared_data = {};
 
     const stack = _getCallerFile();
     this._id = stack + ':' + this.constructor.name;
@@ -48,6 +52,9 @@ export default class IgnisComp<D extends Record<string, any>> {
   // hook
   init(data: D) {}
 
+  css(css: string): CssClass;
+  css(css: T_node<string>): CssClass;
+  css(className: string, css: T_node<string>): CssClass;
   css(...arg) {
     if (this._is_reuse) {
       const comp = this._getSelfFromAggregat();
@@ -73,14 +80,11 @@ export default class IgnisComp<D extends Record<string, any>> {
     }
   }
 
-  makeRoot(settings: { generatorClassName?: any; generatorId?: any } = { generatorClassName: undefined, generatorId: undefined }) {
-    if (!settings.generatorClassName) {
-      settings.generatorClassName = generator.forClass();
-    }
+  makeRoot(input_settings: { generatorClassName: I_gen_css_identifier | null; generatorId?: I_gen_css_identifier | null } = { generatorClassName: null, generatorId: null }) {
+    const settings: { generatorClassName: { next: () => string }; generatorId: { next: () => string }} = {} as any;
+    settings.generatorClassName = input_settings.generatorClassName ?? generator.forClass();
+    settings.generatorId = input_settings.generatorId ?? generator.forId();
 
-    if (!settings.generatorId) {
-      settings.generatorId = generator.forId();
-    }
     this._ctx = {
       generatorClassName: () => settings.generatorClassName.next(),
       generatorId: () => settings.generatorId.next(),
@@ -118,7 +122,7 @@ export default class IgnisComp<D extends Record<string, any>> {
     }
   }
 
-  t(statics, ...variables) {
+  t(statics: TemplateStringsArray, ...variables: Array<CssClass[] | IgnisComp<any>[] | IgnisComp<any> | CssClass | I_functional_comp | number | string>) {
     let out = '';
     for (let i = 0, l = statics.length; i < l; i++) {
       const str = statics[i];
@@ -201,7 +205,7 @@ export default class IgnisComp<D extends Record<string, any>> {
     };
   }
 
-  setSharedData(key, value) {
+  setSharedData<K extends keyof S & string>(key: K, value: S[K]) {
     const comp = this._getSelfFromAggregat();
     if (comp) {
       comp._shared_data[key] = value;
@@ -210,7 +214,7 @@ export default class IgnisComp<D extends Record<string, any>> {
     }
   }
 
-  getSharedData<T>(key: string, fallback?: T) {
+  getSharedData<K extends keyof S & string>(key: K, fallback?: any): S[K] {
     const comp = this._getSelfFromAggregat();
     const shared_data = comp ? comp._shared_data : this._shared_data;
     return shared_data[key] || fallback;
@@ -240,7 +244,7 @@ export default class IgnisComp<D extends Record<string, any>> {
     return this.include(value);
   }
 
-  private _getForObjComponent({ headJs, js, css, html }) {
+  private _getForObjComponent({ headJs, js, css, html }: I_functional_comp) {
     // Create inline component
     const comp = {
       _id: crypto.randomUUID(),
