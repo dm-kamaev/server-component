@@ -2,7 +2,14 @@ import IgnisComp from './IgnisComp';
 import Minify from './Minify';
 
 
-export default class CompToTurboHtml {
+export default function (settings?: { minify: boolean }) {
+  return function render(id: string, get_comp: () => IgnisComp<any>) {
+    return new CompToTurboHtml(id, get_comp, { minify: settings?.minify ?? false }).render();
+  };
+}
+
+
+class CompToTurboHtml {
   t: (statics: any, ...variables: any[]) => string;
   css: (...arg: any[]) => any;
   cssLink: (href: string) => ReturnType<IgnisComp<any>['cssLink']>;
@@ -11,13 +18,10 @@ export default class CompToTurboHtml {
   createId: () => string;
   createClassName: () => string;
   tpl: any;
-  _minify: Minify;
+  private _minify: Minify;
 
-  static render(id: string, get_comp: () => IgnisComp<any>) {
-    return new CompToTurboHtml(id, get_comp).render();
-  }
 
-  constructor(private _id: string, private _get_comp: () => IgnisComp<any>) {
+  constructor(private _id: string, private _get_comp: () => IgnisComp<any>, settings: { minify: boolean }) {
     const root = new IgnisComp({}).makeRoot({
       ...this.generators(),
     });
@@ -31,7 +35,7 @@ export default class CompToTurboHtml {
 
     this.tpl = root.tpl;
 
-    this._minify = new Minify(this.minify());
+    this._minify = new Minify(Boolean(settings.minify));
 
   }
 
@@ -42,12 +46,6 @@ export default class CompToTurboHtml {
       generatorId: null,
     };
   }
-
-
-  protected minify() {
-    return false;
-  }
-
 
   render() {
     const comp = this._get_comp();

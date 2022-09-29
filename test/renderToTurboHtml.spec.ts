@@ -1,4 +1,4 @@
-import { IgnisComp, CompToTurboHtml } from '../index';
+import { IgnisComp, createRenderToTurboHtml } from '../index';
 import Script from '../src/Script';
 
 describe('[CompToTurboHtml.ts]', function () {
@@ -85,8 +85,8 @@ describe('[CompToTurboHtml.ts]', function () {
       return { headJs: headJs, js: js, html, css };
     }
 
-
-    const data = CompToTurboHtml.render('test', () => new ListBook([
+    const renderToTurboHtml = createRenderToTurboHtml({ minify: false });
+    const data = renderToTurboHtml('test', () => new ListBook([
       { id: 1, author: 'Leo Tolstoy', name: 'War and Peace', year: 1863 },
       { id: 2, author: 'Jack London', name: 'White Fang', year: 1906 }
     ]));
